@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -17,6 +19,11 @@ public class UserService {
     public Page<UserResponseDTO> findAll(Pageable pageable) {
         Page<User> users = userRepository.findAll(pageable);
         return users.map(UserMapper::toDto);
+    }
+
+    public Optional<UserResponseDTO> findById(Long id){
+            Optional<User> user = userRepository.findById(id);
+            return user.map(UserMapper::toDto);
     }
 
 }
