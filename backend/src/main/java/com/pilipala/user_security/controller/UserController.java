@@ -5,6 +5,8 @@ import com.pilipala.user_security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +24,22 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserResponseDTO>> findAll(Pageable pageable) {
-        return  ResponseEntity.ok(userService.findAll(pageable));
+        return ResponseEntity.ok(userService.findAll(pageable));
     }
 
     @GetMapping(value= "/{id}")
     public ResponseEntity <Optional<UserResponseDTO>> findByiD(@PathVariable Long id){
-        Optional<UserResponseDTO> dto = userService.findById(id);
-        return ResponseEntity.ok().body(dto);
+        try {
+            Optional<UserResponseDTO> dto = userService.findById(id);
+            if (dto.isEmpty()) {
+               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
+            }
+            return ResponseEntity.ok().body(dto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Optional.empty());
+        }
+
+
     }
 
 
