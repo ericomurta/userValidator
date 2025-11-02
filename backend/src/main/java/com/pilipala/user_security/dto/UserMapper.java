@@ -17,11 +17,15 @@ public class UserMapper {
 
     public static UserResponseDTO toDto(User entity) {
         UserResponseDTO dto = new UserResponseDTO();
+        dto.setId(entity.getId());
         dto.setNome(entity.getNome());
         dto.setEmail(entity.getEmail());
         return dto;
     }
-
+    public static void updateEntityFromDto(UserRequestDTO dto, User entity) {
+        entity.setNome(dto.getNome());
+        entity.setEmail(dto.getEmail());
+    }
 
 
 
